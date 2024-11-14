@@ -1,5 +1,6 @@
 import { FaEye, FaStar } from "react-icons/fa";
 import { CiBookmark, CiShare2 } from "react-icons/ci";
+import { Link } from "react-router-dom";
 
 const NewsCard = (props = {}) => {
   const { news } = props || {};
@@ -35,7 +36,7 @@ const NewsCard = (props = {}) => {
 
       <p className="text-sm text-gray-700 mb-4">
         {news.details.slice(0, 150)}...{" "}
-        <span className="text-primary cursor-pointer">Read More</span>
+        <Link to={`/news/${news._id}`} className="text-primary cursor-pointer">Read More</Link>
       </p>
 
       <div className="flex justify-between items-center">
