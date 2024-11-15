@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../provider/AuthProvider";
 
 const Register = () => {
-  const { createNewUser, setUser } = useContext(AuthContext);
+  const { createNewUser, setUser, updateUserProfile } = useContext(AuthContext);
+  const navigate = useNavigate()
   const [error, setError] = useState({});
 
   const handleSubmit = (e) => {
@@ -24,7 +25,12 @@ const Register = () => {
       .then((result) => {
         const user = result.user;
         setUser(user);
-        console.log(user);
+        updateUserProfile({ display: name, photoURL: photo })
+        .then(()=>{
+          navigate('/')
+        }).catch(err=>{
+          console.log(err);
+        })
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -53,9 +59,7 @@ const Register = () => {
             />
           </div>
           {error.name && (
-            <label className="label text-xs text-red-500">
-              {error.name}
-            </label>
+            <label className="label text-xs text-red-500">{error.name}</label>
           )}
           <div className="form-control">
             <label className="label">
