@@ -1,32 +1,37 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../provider/AuthProvider";
 
 const Register = () => {
-    const {createNewUser, setUser} = useContext(AuthContext)
+  const { createNewUser, setUser } = useContext(AuthContext);
+  const [error, setError] = useState({});
 
-    const handleSubmit =(e)=>{
-        e.preventDefault();
-        //get from data
-        const form = new FormData(e.target);
-        const name = form.get('name')
-        const photo = form.get('photo')
-        const email = form.get('email')
-        const password = form.get('password')
-        console.log({name,photo,email,password});
-
-        createNewUser(email,password)
-        .then(result =>{
-            const user = result.user
-            setUser(user)
-            console.log(user);
-        })
-        .catch(error =>{
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
-        })
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    //get from data
+    const form = new FormData(e.target);
+    const name = form.get("name");
+    if (name.length < 5) {
+      setError({ ...error, name: "must be more the 5 character long" });
+      return;
     }
+    const photo = form.get("photo");
+    const email = form.get("email");
+    const password = form.get("password");
+    console.log({ name, photo, email, password });
+
+    createNewUser(email, password)
+      .then((result) => {
+        const user = result.user;
+        setUser(user);
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+      });
+  };
 
   return (
     <div className="min-h-screen flex justify-center items-center">
@@ -47,6 +52,11 @@ const Register = () => {
               required
             />
           </div>
+          {error.name && (
+            <label className="label text-xs text-red-500">
+              {error.name}
+            </label>
+          )}
           <div className="form-control">
             <label className="label">
               <span className="label-text">Photo URL</span>
